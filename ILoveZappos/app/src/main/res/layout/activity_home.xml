@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".HomeActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+
+            <TextView
+                android:id="@+id/title_home"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:textAlignment="center"
+                android:layout_margin="@dimen/small_margin"
+                android:textSize="@dimen/text_L"
+                android:textColor="@color/grey"
+                android:text="Home"/>
+
+            <android.support.v7.widget.CardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/card_graph"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/option_card_size"
+                android:background="@drawable/icon_bitcurrency"
+                android:layout_below="@id/title_home"
+                android:layout_margin="@dimen/small_margin"
+                card_view:cardCornerRadius="@dimen/card_corner">
+
+                <Button
+                    android:id="@+id/graph_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:background="@color/black"
+                    android:text="Currency Value Graph >>" />
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/card_order"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/option_card_size"
+                android:background="@color/white"
+                android:layout_margin="@dimen/small_margin"
+                android:layout_below="@id/card_graph"
+                card_view:cardCornerRadius="@dimen/card_corner">
+
+                <Button
+                    android:id="@+id/order_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:background="@color/Gold"
+                    android:text="Order Book >>" />
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/card_tracker"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/option_card_size"
+                android:background="@color/white"
+                android:layout_margin="@dimen/small_margin"
+                android:layout_below="@id/card_order"
+                card_view:cardCornerRadius="@dimen/card_corner">
+
+                <Button
+                    android:id="@+id/price_track_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:background="@color/MediumPurple"
+                    android:text="Price Tracker >>" />
+
+            </android.support.v7.widget.CardView>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

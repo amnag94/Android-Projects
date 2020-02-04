@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".GraphActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/refresh_graph"
+            android:layout_width="@dimen/play_icon_size"
+            android:layout_height="@dimen/play_icon_size"
+            android:layout_margin="@dimen/small_margin"
+            android:padding="@dimen/small_margin"
+            android:background="@drawable/refresh"/>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textAlignment="center"
+            android:layout_margin="@dimen/small_margin"
+            android:textSize="@dimen/text_L"
+            android:textColor="@color/grey"
+            android:text="Currency Value Graph"/>
+
+        <ImageButton
+            android:id="@+id/home_graph"
+            android:layout_width="@dimen/play_icon_size"
+            android:layout_height="@dimen/play_icon_size"
+            android:layout_margin="@dimen/small_margin"
+            android:padding="@dimen/small_margin"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/home"/>
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/currency_value_chart"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chart_height"
+            android:layout_margin="@dimen/small_margin"
+            android:layout_centerVertical="true"
+            android:background="@color/black"/>
+
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/spinner_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/grey"
+            android:layout_above="@id/currency_value_chart"
+            android:layout_alignParentRight="true"
+            android:layout_marginVertical="@dimen/medium_margin"
+            android:layout_marginHorizontal="@dimen/ideal_margin"
+            card_view:cardCornerRadius="@dimen/card_corner">
+
+            <Spinner
+                android:id="@+id/currency_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/grey"
+                android:padding="@dimen/small_margin"
+                android:spinnerMode="dialog"
+                android:dropDownSelector="@drawable/drop_down_selector"/>
+                <!--tools:listitem="@layout/list_item"/>-->
+
+        </android.support.v7.widget.CardView>
+
+        <ListView
+            android:id="@+id/list_transaction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/currency_value_chart"
+            android:visibility="invisible"
+            />
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>
