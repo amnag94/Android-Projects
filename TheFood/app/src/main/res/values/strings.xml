@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">The Food</string>
+    <string name="title_news">News</string>
+    <string name="title_videos">Videos</string>
+    <string name="title_search">Search</string>
+    <string name="title_menu">Menu</string>
+    <string name="title_politics">Politics</string>
+    <string name="title_civic">Civic</string>
+    <string name="title_society">Society</string>
+    <string name="title_lifestyle">Lifestyle</string>
+    <string name="title_entertainment">Entertainment</string>
+    <string name="title_sports">Sports</string>
+    <string name="Done">done</string>
+    <string name="Failed">failed</string>
+
+    <string name="title_activity_news_post">NewsPostActivity</string>
+    <string name="news_bytes">newsBlockBytes</string>
+    <string name="search_query">Search Query</string>
+
+    <string name="title_logo">NATIONAL GEOGRAPHIC</string>
+    <string name="btn_skip_intro">Skip Intro</string>
+
+
+    <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
+    <string name="title_activity_you_tube">YouTubeActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="english_op">English</string>
+    <string name="marathi_op">मराठी</string>
+    <string name="hindi_op">हिंदी</string>
+    <string name="first_use">firstrun</string>
+
+    <string name="lang">language</string>
+
+
+    <string name="type_city_update">DAILY_UPDATE</string>
+    <string name="type_news_list">NEWS</string>
+    <string name="type_live_updates">LIVE_UPDATE</string>
+
+    <string name="api_string">api</string>
+    <string name="title">title</string>
+    <string name="txt_color">txt_color</string>
+    <string name="short_desc">short</string>
+    <string name="bg_image">bgimg</string>
+
+    <string-array name="list_types">
+        <item>List Type</item>
+        <item>Cooking</item>
+        <item>Dining</item>
+    </string-array>
+
+</resources>
