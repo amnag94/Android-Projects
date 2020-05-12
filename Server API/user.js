@@ -42,7 +42,7 @@ class Ingredients {
         return Object.keys(this.ingredients).length + 1;
     }
 
-    add_ingredients(ingredient_name, measure, quantity) {
+    add_ingredient(ingredient_name, measure, quantity) {
         var id;
         var return_string;
 
@@ -57,6 +57,11 @@ class Ingredients {
 
         this.ingredients[ingredient_name] = new Ingredient(id, measure, parseFloat(quantity));
         return return_string;
+    }
+
+    empty_ingredients() {
+        this.ingredients = {};
+        return 'Ingredients Emptied';
     }
 }
 

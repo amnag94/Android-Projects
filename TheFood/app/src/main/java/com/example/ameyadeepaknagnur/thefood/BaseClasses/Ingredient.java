@@ -5,6 +5,9 @@ public class Ingredient {
     public static String ID = "id";
     public static String MEASURE = "measure";
     public static String QUANTITY = "quantity";
+    public static String DEF_NAME = "ingredient";
+    public static String DEF_MEASURE = "gms";
+    public static double DEF_QUANTITY = 1.0;
 
     public int id;
     public String name;

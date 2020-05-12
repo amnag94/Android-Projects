@@ -77,16 +77,6 @@ public class AddListActivity extends AppCompatActivity implements View.OnClickLi
         items_list.setAdapter(new ArrayAdapter<>(this, R.layout.list_items, foods));
     }
 
-    private void addToList() {
-        float width = items_list.getLayoutParams().width;
-        float height = items_list.getLayoutParams().height + getResources().getDimension(R.dimen.basic_height_item);
-
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int)width, (int)height);
-        params.addRule(RelativeLayout.BELOW, R.id.header_layout);
-
-        items_list.setLayoutParams(params);
-    }
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -105,10 +95,34 @@ public class AddListActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    private void modifyListSize() {
+        // Show another item in list
+        float width = items_list.getLayoutParams().width;
+        float height = items_list.getLayoutParams().height + getResources().getDimension(R.dimen.basic_height_item);
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int)width, (int)height);
+        params.addRule(RelativeLayout.BELOW, R.id.header_layout);
+
+        items_list.setLayoutParams(params);
+    }
+
+    private void addToList() {
+        // Adding default new item to the list
+        IngredientsAdapter list_adapter = (IngredientsAdapter) items_list.getAdapter();
+
+        Ingredient new_item = new Ingredient(list_adapter.ingredients.size() + 1, Ingredient.DEF_NAME, Ingredient.DEF_MEASURE, Ingredient.DEF_QUANTITY);
+        list_adapter.ingredients.add(new_item);
+
+        items_list.setAdapter(list_adapter);
+
+        modifyListSize();
+    }
+
     private void saveList() {
         IngredientsAdapter list_adapter = (IngredientsAdapter) items_list.getAdapter();
 
         if(list_adapter != null) {
+            emptyIngredients();
             updateAllIngredients(list_adapter.ingredients);
         }
     }
@@ -136,6 +150,13 @@ public class AddListActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
+    private void emptyIngredients() {
+
+        IngredientsEmptyTask ingredients_empty = new IngredientsEmptyTask();
+        ingredients_empty.execute();
+
+    }
+
     private void updateAllIngredients(ArrayList<Ingredient> ingredients) {
 
         IngredientsUpdateTask ingredients_task = new IngredientsUpdateTask(ingredients);
@@ -157,7 +178,7 @@ public class AddListActivity extends AppCompatActivity implements View.OnClickLi
 
             try {
 
-                URL connection_url = new URL(ApiInfo.url + "info/");
+                URL connection_url = new URL(ApiInfo.url + ApiInfo.url_ext_ingred);
                 HttpURLConnection http_connection = (HttpURLConnection) connection_url.openConnection();
 
                 http_connection.setRequestMethod("GET");
@@ -202,7 +223,7 @@ public class AddListActivity extends AppCompatActivity implements View.OnClickLi
                 //ArrayList<String> ingred_names = new ArrayList<>();
 
                 for(Ingredient ingredient : ingredients) {
-                    addToList();
+                    modifyListSize();
                 }
 
                 try {
@@ -238,7 +259,7 @@ public class AddListActivity extends AppCompatActivity implements View.OnClickLi
             try {
 
                 for(Ingredient ingredient : ingredients) {
-                    URL connection_url = new URL(ApiInfo.url + "info/" + ingredient.name + "/" + ingredient.measure + "/" + ingredient.quantity);
+                    URL connection_url = new URL(ApiInfo.url + ApiInfo.url_ext_ingred + "add/" + ingredient.name + "/" + ingredient.measure + "/" + ingredient.quantity);
                     HttpURLConnection http_connection = (HttpURLConnection) connection_url.openConnection();
 
                     http_connection.setRequestMethod("PUT");
@@ -282,7 +303,74 @@ public class AddListActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         protected void onPostExecute(String result) {
-            Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Saving List : " + result, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private class IngredientsEmptyTask extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            BufferedReader reader = null;
+
+            try {
+
+                URL connection_url = new URL(ApiInfo.url + ApiInfo.url_ext_ingred + "empty");
+                HttpURLConnection http_connection = (HttpURLConnection) connection_url.openConnection();
+
+                http_connection.setRequestMethod("PUT");
+                //http_connection.setRequestProperty();
+
+                int response_code = http_connection.getResponseCode();
+
+                if (response_code == HttpURLConnection.HTTP_OK) {
+
+                    reader = new BufferedReader(new InputStreamReader(http_connection.getInputStream()));
+
+                    String result = reader.readLine();
+                    if (result.contains(ApiInfo.RESULT_EMPTIED)) {
+                        return ApiInfo.RESULT_SUCCESS;
+                    }
+                    else {
+                        return ApiInfo.RESULT_FAILED;
+                    }
+
+                }
+                else {
+                    Log.d("IngredientsTask", ApiInfo.NO_RESPONSE);
+                    return ApiInfo.RESULT_FAILED;
+                }
+
+            }
+            catch (Exception e) {
+
+                Log.d("IngredientsTask",  e.getMessage());
+                e.printStackTrace();
+                return ApiInfo.RESULT_FAILED;
+
+            }
+            finally {
+                if(reader != null) {
+                    try {
+                        reader.close();
+                    }
+                    catch (IOException e) {
+                        Log.d("IngredientsTask", e.getMessage());
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            //Toast.makeText(getApplicationContext(), "Empty List ... " + result, Toast.LENGTH_SHORT).show();
         }
 
     }

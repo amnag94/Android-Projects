@@ -6,19 +6,23 @@ var users = require('./user');
 
 var ingredients = new users.Ingredients();
 
-app.get('/info', (req, res) => {
+app.get('/ingredients', (req, res) => {
     res.type('json');
     res.send(ingredients.get_ingredients());
 });
 
-app.get('/info/:ingred', (req, res) => {
+app.get('/ingredients/:ingred', (req, res) => {
     res.type('json');
     res.send(ingredients.get_ingredient(req.params.ingred));
 });
 
-app.put('/info/:ingred/:measure/:quantity', (req, res) => {
-    result = ingredients.add_ingredients(req.params.ingred, req.params.measure, req.params.quantity);
+app.put('/ingredients/add/:ingred/:measure/:quantity', (req, res) => {
+    result = ingredients.add_ingredient(req.params.ingred, req.params.measure, req.params.quantity);
     res.send(`${req.params.ingred} ${result}`);
+});
+
+app.put('/ingredients/empty', (req, res) => {
+    res.send(ingredients.empty_ingredients());
 });
 
 app.listen(3000);
