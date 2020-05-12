@@ -1,17 +1,22 @@
 package com.example.ameyadeepaknagnur.thefood.Activities;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Adapter;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.example.ameyadeepaknagnur.thefood.Adapters.IngredientsAdapter;
 import com.example.ameyadeepaknagnur.thefood.BaseClasses.Ingredient;
 import com.example.ameyadeepaknagnur.thefood.Helpers.ApiInfo;
 import com.example.ameyadeepaknagnur.thefood.Helpers.Constants;
@@ -30,8 +35,9 @@ import java.util.Arrays;
 
 public class AddListActivity extends AppCompatActivity implements View.OnClickListener {
 
-    ImageButton add_list_item;
+    ImageButton add_list_item, refresh_list, save_list;
     ListView items_list;
+    EditText name_edittxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +46,25 @@ public class AddListActivity extends AppCompatActivity implements View.OnClickLi
 
         // Initializations
         add_list_item = findViewById(R.id.add_list_item);
+        refresh_list = findViewById(R.id.refresh_list);
+        save_list = findViewById(R.id.save_list);
         items_list = findViewById(R.id.list_of_lists);
+        name_edittxt = findViewById(R.id.list_name);
 
         //initializeList();
         getAllIngredients();
 
         // Listeners
         add_list_item.setOnClickListener(this);
+        refresh_list.setOnClickListener(this);
+        save_list.setOnClickListener(this);
+
+        dismissKeyboard(name_edittxt);
+    }
+
+    private void dismissKeyboard(EditText editText) {
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
     }
 
     private void initializeList() {
@@ -61,10 +79,10 @@ public class AddListActivity extends AppCompatActivity implements View.OnClickLi
 
     private void addToList() {
         float width = items_list.getLayoutParams().width;
-        float height = items_list.getLayoutParams().height + getResources().getDimension(R.dimen.option_icon_size);
+        float height = items_list.getLayoutParams().height + getResources().getDimension(R.dimen.basic_height_item);
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int)width, (int)height);
-        params.addRule(RelativeLayout.BELOW, R.id.layout_name_list);
+        params.addRule(RelativeLayout.BELOW, R.id.header_layout);
 
         items_list.setLayoutParams(params);
     }
@@ -75,14 +93,52 @@ public class AddListActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.add_list_item :
                 addToList();
                 break;
+            case R.id.refresh_list :
+                refreshList();
+                break;
+            case R.id.save_list :
+                save_list.requestFocus();
+                saveList();
+                break;
             default:
                 Log.d(Constants.DEFAULT_CLICK_TAG, Constants.DEFAULT_CLICK_MSG);
         }
     }
 
+    private void saveList() {
+        IngredientsAdapter list_adapter = (IngredientsAdapter) items_list.getAdapter();
+
+        if(list_adapter != null) {
+            updateAllIngredients(list_adapter.ingredients);
+        }
+    }
+
+    private void refreshList() {
+        resetList();
+        getAllIngredients();
+        Toast.makeText(this, "Refreshed", Toast.LENGTH_SHORT).show();
+    }
+
+    private void resetList() {
+        float width = items_list.getLayoutParams().width;
+        float height = 0;
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int)width, (int)height);
+        params.addRule(RelativeLayout.BELOW, R.id.header_layout);
+
+        items_list.setLayoutParams(params);
+    }
+
     private void getAllIngredients() {
 
         IngredientsTask ingredients_task = new IngredientsTask();
+        ingredients_task.execute();
+
+    }
+
+    private void updateAllIngredients(ArrayList<Ingredient> ingredients) {
+
+        IngredientsUpdateTask ingredients_task = new IngredientsUpdateTask(ingredients);
         ingredients_task.execute();
 
     }
@@ -143,14 +199,90 @@ public class AddListActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         protected void onPostExecute(ArrayList<Ingredient> ingredients) {
             if (ingredients != null) {
-                ArrayList<String> ingred_names = new ArrayList<>();
+                //ArrayList<String> ingred_names = new ArrayList<>();
 
                 for(Ingredient ingredient : ingredients) {
-                    ingred_names.add(ingredient.name);
+                    addToList();
                 }
 
-                items_list.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.list_items, ingred_names));
+                try {
+                    items_list.setAdapter(new IngredientsAdapter(getApplicationContext(), R.layout.list_items, ingredients));
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+        }
+
+    }
+
+    private class IngredientsUpdateTask extends AsyncTask<Void, Void, String> {
+
+        ArrayList<Ingredient> ingredients;
+
+        IngredientsUpdateTask(ArrayList<Ingredient> ingredients) {
+            this.ingredients = ingredients;
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            BufferedReader reader = null;
+            String success = ApiInfo.RESULT_SUCCESS;
+
+            try {
+
+                for(Ingredient ingredient : ingredients) {
+                    URL connection_url = new URL(ApiInfo.url + "info/" + ingredient.name + "/" + ingredient.measure + "/" + ingredient.quantity);
+                    HttpURLConnection http_connection = (HttpURLConnection) connection_url.openConnection();
+
+                    http_connection.setRequestMethod("PUT");
+                    //http_connection.setRequestProperty();
+
+                    int response_code = http_connection.getResponseCode();
+
+                    if (response_code == HttpURLConnection.HTTP_OK) {
+                        reader = new BufferedReader(new InputStreamReader(http_connection.getInputStream()));
+
+                        String result = reader.readLine();
+                        if (!(result.contains(ApiInfo.RESULT_UPDATED) || result.contains(ApiInfo.RESULT_ADDED))) {
+                            success = ApiInfo.RESULT_FAILED;
+                        }
+                    } else {
+                        Log.d("IngredientsTask", ApiInfo.NO_RESPONSE);
+                        return ApiInfo.RESULT_FAILED;
+                    }
+                }
+
+                return success;
+            }
+            catch (Exception e) {
+
+                Log.d("IngredientsTask",  e.getMessage());
+                e.printStackTrace();
+                return ApiInfo.RESULT_FAILED;
+
+            }
+            finally {
+                if(reader != null) {
+                    try {
+                        reader.close();
+                    }
+                    catch (IOException e) {
+                        Log.d("IngredientsTask", e.getMessage());
+                    }
+                }
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Toast.makeText(getApplicationContext(), result, Toast.LENGTH_SHORT).show();
         }
 
     }

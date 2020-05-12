@@ -43,7 +43,7 @@
             android:id="@+id/list_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/ideal_margin"
+            android:layout_marginVertical="@dimen/medium_margin"
             android:layout_marginLeft="@dimen/small_margin"
             android:padding="@dimen/small_margin"
             android:background="@color/greyish"
@@ -68,11 +68,33 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/header_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/basic_height_item"
+        android:layout_below="@id/layout_name_list">
+
+        <include
+            android:id="@+id/header_list"
+            layout="@layout/list_items"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageButton
+            android:id="@+id/refresh_list"
+            android:layout_width="@dimen/med_small_btn_size"
+            android:layout_height="@dimen/med_small_btn_size"
+            android:layout_marginVertical="@dimen/ideal_margin"
+            android:background="@color/transparent"
+            android:src="@drawable/refresh_icon"/>
+
+    </LinearLayout>
+
     <ScrollView
         android:id="@+id/list_items_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/layout_name_list">
+        android:layout_below="@id/header_layout">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -81,7 +103,7 @@
             <ListView
                 android:id="@+id/list_of_lists"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/option_icon_size">
+                android:layout_height="0dp">
             </ListView>
 
 
