@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegisterActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/register_heading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/medium_margin"
+                android:textSize="@dimen/text_XL"
+                android:textColor="@color/black"
+                android:text="Register"/>
+
+            <LinearLayout
+                android:id="@+id/register_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/large_margin"
+                android:layout_below="@id/register_heading"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/register_txt_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Email"/>
+
+                <EditText
+                    android:id="@+id/register_input_email"
+                    android:layout_width="@dimen/medium_width_item"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/medium_margin"
+                    android:inputType="textEmailAddress"/>
+
+                <TextView
+                    android:id="@+id/register_txt_pass"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Password"/>
+
+                <EditText
+                    android:id="@+id/register_input_pass"
+                    android:layout_width="@dimen/medium_width_item"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/medium_margin"
+                    android:inputType="textPassword"/>
+
+                <TextView
+                    android:id="@+id/register_txt_conf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Confirm Password"/>
+
+                <EditText
+                    android:id="@+id/register_input_conf"
+                    android:layout_width="@dimen/medium_width_item"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/medium_margin"
+                    android:inputType="textPassword"/>
+
+                <TextView
+                    android:id="@+id/register_txt_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Name"/>
+
+                <EditText
+                    android:id="@+id/register_input_name"
+                    android:layout_width="@dimen/medium_width_item"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/medium_margin"
+                    android:inputType="textPersonName"/>
+
+                <TextView
+                    android:id="@+id/register_txt_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phone Number"/>
+
+                <EditText
+                    android:id="@+id/register_input_phone"
+                    android:layout_width="@dimen/medium_width_item"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/medium_margin"
+                    android:inputType="phone"/>
+
+                <TextView
+                    android:id="@+id/register_txt_bio"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bio (Optional)"/>
+
+                <EditText
+                    android:id="@+id/register_input_bio"
+                    android:layout_width="@dimen/full_width_item"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/medium_margin"
+                    android:inputType="textMultiLine"/>
+
+                <LinearLayout
+                    android:id="@+id/layout_user_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/card_type_coach"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/medium_margin"
+                        app:cardCornerRadius="@dimen/card_radius_round">
+
+                        <TextView
+                            android:id="@+id/text_type_coach"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/medium_margin"
+                            android:background="@color/transparent"
+                            android:textSize="@dimen/text_medium"
+                            android:text="Coach"/>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/card_type_athlete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/medium_margin"
+                        android:background="@drawable/border"
+                        app:cardCornerRadius="@dimen/card_radius_round">
+
+                        <TextView
+                            android:id="@+id/text_type_athlete"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/medium_margin"
+                            android:background="@color/transparent"
+                            android:textSize="@dimen/text_medium"
+                            android:text="Athlete"/>
+
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
