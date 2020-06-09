@@ -154,7 +154,24 @@
 
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/register_txt_loc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Location"/>
 
+                <EditText
+                    android:id="@+id/register_input_loc"
+                    android:layout_width="@dimen/full_width_item"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"/>
+
+                <ListView
+                    android:id="@+id/location_suggestions"
+                    android:layout_width="@dimen/medium_width_item"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:layout_marginBottom="@dimen/medium_margin"/>
 
             </LinearLayout>
 
