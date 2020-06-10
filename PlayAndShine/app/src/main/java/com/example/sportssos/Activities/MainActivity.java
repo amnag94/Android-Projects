@@ -1,9 +1,12 @@
-package com.example.sportssos;
+package com.example.sportssos.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import com.example.sportssos.Activities.LoginActivity;
+import com.example.sportssos.R;
 
 public class MainActivity extends AppCompatActivity {
 

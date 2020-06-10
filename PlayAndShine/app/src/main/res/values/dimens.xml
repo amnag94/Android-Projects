@@ -26,6 +26,7 @@
     <dimen name="text_XS">5dp</dimen>
     <dimen name="text_tiny">4dp</dimen>
     <dimen name="text_S">10dp</dimen>
+    <dimen name="text_medS">12dp</dimen>
     <dimen name="text_medium">15dp</dimen>
     <dimen name="text_L">20dp</dimen>
     <dimen name="text_XL">25dp</dimen>

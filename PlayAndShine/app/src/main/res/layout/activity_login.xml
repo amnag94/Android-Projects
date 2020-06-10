@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".Activities.LoginActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -61,8 +61,17 @@
                         android:id="@+id/login_input_pass"
                         android:layout_width="@dimen/medium_width_item"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/medium_margin"
+                        android:layout_marginBottom="@dimen/small_margin"
                         android:inputType="textPassword"/>
+
+                    <TextView
+                        android:id="@+id/warning_txt_login"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/small_margin"
+                        android:visibility="gone"
+                        android:textColor="@color/red"
+                        android:text=""/>
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="@dimen/basic_width_item"
