@@ -9,6 +9,7 @@ import android.app.SharedElementCallback;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.DataSetObserver;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -19,10 +20,14 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ScrollView;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,14 +64,17 @@ import java.util.concurrent.TimeUnit;
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     int SELECTED, UNSELECTED;
+    ScrollView register_scroll_view;
     CardView card_type_coach, card_type_athlete, card_register;
     TextView txt_type_coach, txt_type_athlete, warning_txt_pass, warning_txt_reg;
     EditText register_input_loc, register_input_phone;
     EditText register_input_email, register_input_pass, register_input_conf;
+    Spinner register_input_sport;
     PlacesClient places_client;
     ArrayList<String> places;
     ListView location_suggestions;
     String[] permissions = {"android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"};
+    ArrayList<String> preferred_sports;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +82,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_register);
 
         // Initializations
+        register_scroll_view = findViewById(R.id.register_scroll_view);
         card_type_athlete = findViewById(R.id.card_type_athlete);
         card_type_coach = findViewById(R.id.card_type_coach);
         card_register = findViewById(R.id.card_register);
@@ -86,9 +95,18 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         register_input_pass = findViewById(R.id.register_input_pass);
         register_input_conf = findViewById(R.id.register_input_conf);
         register_input_phone = findViewById(R.id.register_input_phone);
+        register_input_sport = findViewById(R.id.register_input_sport);
         location_suggestions = findViewById(R.id.location_suggestions);
         SELECTED = getResources().getColor(R.color.Blue, getTheme());
         UNSELECTED = getResources().getColor(R.color.Black, getTheme());
+
+        // Spinner for sports
+        preferred_sports = new ArrayList<>();
+        if (initializeSportsList()) {
+            ArrayAdapter<String> sports_adapter = new ArrayAdapter<>(this, R.layout.basic_list_item, preferred_sports);
+            register_input_sport.setAdapter(sports_adapter);
+            register_input_sport.setSelection(0, true);
+        }
 
         // Default type
         txt_type_coach.setSelected(true);
@@ -168,6 +186,27 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
+    private boolean initializeSportsList() {
+        while(true) {
+            String sport = SessionInfo.getSport();
+            if (sport != null) {
+                preferred_sports.add(sport);
+            }
+            else {
+                break;
+            }
+        }
+
+        SessionInfo.position = -1;
+
+        if (preferred_sports.size() > 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     private String getCurrentLocation() {
 
         String location = "";
@@ -221,6 +260,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             register_user.phone = register_input_phone.getText().toString();
             register_user.location = register_input_loc.getText().toString();
 
+            warning_txt_reg.setVisibility(View.GONE);
             if(!register_user.password.equals(conf_password)) {
                 warning_txt_pass.setVisibility(View.VISIBLE);
             }
@@ -228,6 +268,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 warning_txt_pass.setVisibility(View.GONE);
                 validateCredentials(register_user);
             }
+
+            register_scroll_view.fullScroll(View.FOCUS_UP);
         }
         else {
 

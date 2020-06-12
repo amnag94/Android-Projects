@@ -7,6 +7,7 @@
     tools:context=".Activities.RegisterActivity">
 
     <ScrollView
+        android:id="@+id/register_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -138,13 +139,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/medium_margin"
-                        app:cardCornerRadius="@dimen/card_radius_round">
+                        app:cardCornerRadius="@dimen/card_radius_corner">
 
                         <TextView
                             android:id="@+id/text_type_coach"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/medium_margin"
+                            android:layout_marginHorizontal="@dimen/medium_margin"
+                            android:layout_marginVertical="@dimen/small_margin"
                             android:background="@color/transparent"
                             android:textSize="@dimen/text_medium"
                             android:text="Coach"/>
@@ -157,13 +159,14 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/medium_margin"
                         android:background="@drawable/border"
-                        app:cardCornerRadius="@dimen/card_radius_round">
+                        app:cardCornerRadius="@dimen/card_radius_corner">
 
                         <TextView
                             android:id="@+id/text_type_athlete"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/medium_margin"
+                            android:layout_marginHorizontal="@dimen/medium_margin"
+                            android:layout_marginVertical="@dimen/small_margin"
                             android:background="@color/transparent"
                             android:textSize="@dimen/text_medium"
                             android:text="Athlete"/>
@@ -191,27 +194,42 @@
                     android:layout_marginBottom="@dimen/medium_margin"
                     android:inputType="text"/>
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/card_register"
+                <TextView
+                    android:id="@+id/register_txt_sport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Preferred Sport"/>
+
+                <Spinner
+                    android:id="@+id/register_input_sport"
                     android:layout_width="@dimen/medium_width_item"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/large_margin"
-                    android:background="@drawable/border"
-                    app:cardCornerRadius="@dimen/card_radius_round">
-
-                    <TextView
-                        android:id="@+id/text_register"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/medium_margin"
-                        android:background="@color/transparent"
-                        android:textSize="@dimen/text_medium"
-                        android:textAlignment="center"
-                        android:text="Register"/>
-
-                </androidx.cardview.widget.CardView>
+                    android:layout_marginBottom="@dimen/medium_margin"/>
 
             </LinearLayout>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_register"
+                android:layout_width="@dimen/full_width_item"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/register_layout"
+                android:layout_marginVertical="@dimen/medium_margin"
+                android:background="@drawable/border"
+                app:cardCornerRadius="@dimen/card_radius_corner">
+
+                <TextView
+                    android:id="@+id/text_register"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/large_margin"
+                    android:layout_marginVertical="@dimen/medium_margin"
+                    android:background="@color/transparent"
+                    android:textSize="@dimen/text_medium"
+                    android:textAlignment="center"
+                    android:text="Join"/>
+
+            </androidx.cardview.widget.CardView>
 
         </RelativeLayout>
 

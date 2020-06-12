@@ -6,6 +6,8 @@ import com.google.firebase.auth.FirebaseUser;
 public class SessionInfo {
     public static FirebaseAuth firebase_instance;
     public static User user;
+    public static String sports = " Archery, Badminton, Football, Shooting, Swimming, Diving, Wrestling, Boxing, Tennis, Squash, Weightlifting, Gymnastics, Athletics, Table tennis, Basketball, Volleyball, Cycling";
+    public static int position = -1;
 
     public static void initialize() {
         firebase_instance = FirebaseAuth.getInstance();
@@ -19,5 +21,20 @@ public class SessionInfo {
         else {
             user = null;
         }
+    }
+
+    public static String getSport() {
+        if (position >= sports.length()) {
+            return null;
+        }
+
+        int start = position + 2;
+        int end = sports.indexOf(",", start);
+
+        // If last one
+        end = end == -1 ? sports.length() : end;
+
+        position = end;
+        return sports.substring(start, end);
     }
 }

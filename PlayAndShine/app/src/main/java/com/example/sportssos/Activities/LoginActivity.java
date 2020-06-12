@@ -2,9 +2,11 @@ package com.example.sportssos.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,7 +22,8 @@ import com.google.firebase.auth.AuthResult;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button login_btn, register_btn;
+    Button register_btn;
+    CardView card_login;
     EditText login_input_email, login_input_pass;
     TextView warning_txt_login;
 
@@ -30,7 +33,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         // Initializations
-        login_btn = findViewById(R.id.login_btn);
+        card_login = findViewById(R.id.card_login);
         register_btn = findViewById(R.id.register_btn);
         login_input_email = findViewById(R.id.login_input_email);
         login_input_pass = findViewById(R.id.login_input_pass);
@@ -46,7 +49,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         // Set Listeners
-        login_btn.setOnClickListener(this);
+        card_login.setOnClickListener(this);
         register_btn.setOnClickListener(this);
 
     }
@@ -55,7 +58,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         Intent next_activity;
 
-        if(v == findViewById(R.id.login_btn)) {
+        if(v == findViewById(R.id.card_login)) {
             final User user = new User();
             user.email = login_input_email.getText().toString();
             user.password = login_input_pass.getText().toString();
@@ -77,6 +80,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void signInUser(final User user) {
+        if (user.email.equals("") || user.password.equals("")) {
+            if (warning_txt_login != null) {
+                warning_txt_login.setText("Email and Password cannot be empty");
+                warning_txt_login.setVisibility(View.VISIBLE);
+            }
+            return;
+        }
         if (SessionInfo.firebase_instance != null) {
             SessionInfo.firebase_instance.signInWithEmailAndPassword(user.email, user.password)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
