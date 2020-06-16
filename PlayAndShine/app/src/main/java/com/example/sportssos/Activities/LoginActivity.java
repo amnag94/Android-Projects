@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.database.DatabaseReference;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -26,6 +27,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     CardView card_login;
     EditText login_input_email, login_input_pass;
     TextView warning_txt_login;
+    DatabaseReference user_database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         // If user logged in then redirect to dashboard
         if(SessionInfo.firebase_instance != null && SessionInfo.user != null) {
+            retrieveUserInfo(SessionInfo.user.email);
+
             Intent home = new Intent(this, DashboardActivity.class);
             startActivity(home);
         }
@@ -54,6 +58,28 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    private void retrieveUserInfo(String email) {
+
+        String user_email = "";
+
+        for (char email_char : email.toCharArray()) {
+            if ((email_char >= 'a' && email_char <= 'z') ||
+                    (email_char >= 'A' && email_char <= 'Z') ||
+                    (email_char >= '0' && email_char <= '9')) {
+                user_email += email_char;
+            }
+        }
+
+        Log.d("Id for user", user_email);
+
+        DatabaseReference user_db = SessionInfo.firebase_database.getReference(SessionInfo.USER_DB_PATH);
+        SessionInfo.user.location = user_db.child(user_email).child("location").getKey();
+        SessionInfo.user.phone = user_db.child(user_email).child("phone").getKey();
+        SessionInfo.user.type = user_db.child(user_email).child("type").getKey();
+        SessionInfo.user.name = user_db.child(user_email).child("name").getKey();
+
+    }
+
     @Override
     public void onClick(View v) {
         Intent next_activity;
@@ -61,9 +87,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if(v == findViewById(R.id.card_login)) {
             final User user = new User();
             user.email = login_input_email.getText().toString();
-            user.password = login_input_pass.getText().toString();
+            String password = login_input_pass.getText().toString();
 
-            signInUser(user);
+            signInUser(user, password);
 
             next_activity = null;
         }
@@ -79,8 +105,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void signInUser(final User user) {
-        if (user.email.equals("") || user.password.equals("")) {
+    private void signInUser(final User user, String password) {
+        if (user.email.equals("") || password.equals("")) {
             if (warning_txt_login != null) {
                 warning_txt_login.setText("Email and Password cannot be empty");
                 warning_txt_login.setVisibility(View.VISIBLE);
@@ -88,12 +114,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return;
         }
         if (SessionInfo.firebase_instance != null) {
-            SessionInfo.firebase_instance.signInWithEmailAndPassword(user.email, user.password)
+            SessionInfo.firebase_instance.signInWithEmailAndPassword(user.email, password)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 SessionInfo.user = user;
+                                retrieveUserInfo(user.email);
                                 Intent home = new Intent(getApplicationContext(), DashboardActivity.class);
                                 startActivity(home);
                             }

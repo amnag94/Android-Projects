@@ -55,6 +55,7 @@ import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -253,7 +254,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         else if (v == findViewById(R.id.card_register)) {
             User register_user = new User();
             register_user.email = register_input_email.getText().toString();
-            register_user.password = register_input_pass.getText().toString();
+            String password = register_input_pass.getText().toString();
             String conf_password = register_input_conf.getText().toString();
 
             register_user.type = txt_type_athlete.isSelected() ? "Athlete" : "Coach";
@@ -261,12 +262,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             register_user.location = register_input_loc.getText().toString();
 
             warning_txt_reg.setVisibility(View.GONE);
-            if(!register_user.password.equals(conf_password)) {
+            if(!password.equals(conf_password)) {
                 warning_txt_pass.setVisibility(View.VISIBLE);
             }
             else {
                 warning_txt_pass.setVisibility(View.GONE);
-                validateCredentials(register_user);
+                validateCredentials(register_user, password);
             }
 
             register_scroll_view.fullScroll(View.FOCUS_UP);
@@ -277,15 +278,16 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-    private void registerUser(final User user) {
+    private void registerUser(final User user, final String password) {
         if (SessionInfo.firebase_instance != null) {
-            SessionInfo.firebase_instance.createUserWithEmailAndPassword(user.email, user.password)
+            SessionInfo.firebase_instance.createUserWithEmailAndPassword(user.email, password)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 SessionInfo.user = user;
-                                signInUser(user);
+                                storeUserInfo(user);
+                                signInUser(user, password);
                             }
                             else {
                                 if (warning_txt_reg != null) {
@@ -308,14 +310,35 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    private void signInUser(final User user) {
+    private void storeUserInfo(User user) {
+        String user_email = "";
+
+        for (char email_char : user.email.toCharArray()) {
+            if ((email_char >= 'a' && email_char <= 'z') ||
+                    (email_char >= 'A' && email_char <= 'Z') ||
+                    (email_char >= '0' && email_char <= '9')) {
+                user_email += email_char;
+            }
+        }
+
+        Log.d("Storing : Id for user ", user_email);
+
+        if (SessionInfo.firebase_database != null) {
+            DatabaseReference user_database = SessionInfo.firebase_database.getReference(SessionInfo.USER_DB_PATH);
+            user_database.setValue(user_email);
+            user_database.child(user_email).setValue(user);
+        }
+    }
+
+    private void signInUser(final User user, String password) {
         if (SessionInfo.firebase_instance != null) {
-            SessionInfo.firebase_instance.signInWithEmailAndPassword(user.email, user.password)
+            SessionInfo.firebase_instance.signInWithEmailAndPassword(user.email, password)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 SessionInfo.user = user;
+                                //retrieveUserInfo(user.email);
                                 Intent home = new Intent(getApplicationContext(), DashboardActivity.class);
                                 startActivity(home);
                             }
@@ -339,13 +362,35 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    private boolean validateCredentials(User user) {
+    private void retrieveUserInfo(String email) {
+
+        String user_email = "";
+
+        for (char email_char : email.toCharArray()) {
+            if ((email_char >= 'a' && email_char <= 'z') ||
+                    (email_char >= 'A' && email_char <= 'Z') ||
+                    (email_char >= '0' && email_char <= '9')) {
+                user_email += email_char;
+            }
+        }
+
+        Log.d("Id for user", user_email);
+
+        DatabaseReference user_db = SessionInfo.firebase_database.getReference(SessionInfo.USER_DB_PATH);
+        SessionInfo.user.location = user_db.child(user_email).child("location").getKey();
+        SessionInfo.user.phone = user_db.child(user_email).child("phone").getKey();
+        SessionInfo.user.type = user_db.child(user_email).child("type").getKey();
+        SessionInfo.user.name = user_db.child(user_email).child("name").getKey();
+
+    }
+
+    private boolean validateCredentials(User user, String password) {
         if (!user.email.matches(".+@.+\\..+")) {
             warning_txt_reg.setText("Invalid Email");
             warning_txt_reg.setVisibility(View.VISIBLE);
             return false;
         }
-        if (!(user.password.length() >= 6)) {
+        if (!(password.length() >= 6)) {
             warning_txt_reg.setText("Password should be 6 or more characters");
             warning_txt_reg.setVisibility(View.VISIBLE);
             return false;
@@ -360,11 +405,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             warning_txt_reg.setVisibility(View.VISIBLE);
             return false;
         }
-        verifyPhoneNum(user);
+        verifyPhoneNum(user, password);
         return true;
     }
 
-    private void verifyPhoneNum(final User register_user) {
+    private void verifyPhoneNum(final User register_user, final String password) {
 
         final int verification_id, resend_token;
 
@@ -379,7 +424,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 //     detect the incoming verification SMS and perform verification without
                 //     user action.
 
-                registerUser(register_user);
+                Toast.makeText(getApplicationContext(), "Phone Number Verified\nRegistering user...", Toast.LENGTH_LONG).show();
+                registerUser(register_user, password);
             }
 
             @Override
